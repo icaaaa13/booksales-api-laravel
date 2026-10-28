@@ -7,10 +7,12 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('authors', function (Blueprint $table) {
-            $table->id();
-            $table->string('name'); // Nama Author
-            $table->string('country'); // Negara
-            $table->timestamps();
+    $table->id();
+    $table->string('name');
+    $table->text('bio')->nullable();
+    $table->string('name');
+    $table->text('bio')->nullable();
+    $table->timestamps();
         });
     }
 
