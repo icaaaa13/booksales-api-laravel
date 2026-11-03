@@ -1,30 +1,28 @@
-<?php
+<?php 
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\TransactionController;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\AuthorController;
-use App\Http\Controllers\Api\GenreController;
-use App\Http\Controllers\Api\BookController;
 
-// Endpoint Autentikasi Publik
-// Endpoint Autentikasi Publik
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+*/
+
+// Route untuk Login (Mendapatkan Token JWT)
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 
-// 1. Public Routes (Read All & Show)
-Route::get('/authors', [AuthorController::class, 'index']);
-Route::get('/authors/{id}', [AuthorController::class, 'show']);
-
-Route::get('/genres', [GenreController::class, 'index']);
-Route::get('/genres/{id}', [GenreController::class, 'show']);
-
-// 2. Protected Routes (Create, Update, Destroy)
+// Route untuk Customer yang sudah terautentikasi (Create, Update, Show)
 Route::middleware(['auth:api'])->group(function () {
-    Route::post('/authors', [AuthorController::class, 'store']);
-    Route::put('/authors/{id}', [AuthorController::class, 'update']);
-    Route::delete('/authors/{id}', [AuthorController::class, 'destroy']);
+    Route::post('/transactions', [TransactionController::class, 'store']);    // Create
+    Route::put('/transactions/{id}', [TransactionController::class, 'update']); // Update
+    Route::get('/transactions/{id}', [TransactionController::class, 'show']);   // Show detail
+});
 
-    Route::post('/genres', [GenreController::class, 'store']);
-    Route::put('/genres/{id}', [GenreController::class, 'update']);
-    Route::delete('/genres/{id}', [GenreController::class, 'destroy']);
+// Route khusus Admin (Read All & Destroy)
+Route::middleware(['auth:api', 'admin'])->group(function () {
+    Route::get('/transactions', [TransactionController::class, 'index']);      // Read All
+    Route::delete('/transactions/{id}', [TransactionController::class, 'destroy']); // Destroy
 });
